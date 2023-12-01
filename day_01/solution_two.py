@@ -43,9 +43,6 @@ digits_tree = {
     "9": 9,
 }
 
-
-# Not 54414
-# Not 54431
 def main():
     results = []
     count = 0
@@ -71,6 +68,9 @@ def parse(line):
     while tail <= len(line):
         if head == tail:
             tail += 1
+        if head > tail:
+            tail = head
+            continue
         if line[head:tail] in digits_tree:
             if isinstance(digits_tree[line[head:tail]], int):
                 result.append(digits_tree[line[head:tail]])
