@@ -1,7 +1,7 @@
 import itertools
 import string
 
-from day_03.utils import get_neighbors, is_valid
+from utils import get_neighbors, is_valid
 
 
 def make_map(file_name):
