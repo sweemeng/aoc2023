@@ -87,7 +87,10 @@ def main():
         print("part number:", part_number)
         for area in part_numbers[part_number]:
             neighbors = get_neighbors(schematics, area)
+            print("neighbors:", neighbors)
+            print("is valid:", is_valid(neighbors))
             if is_valid(neighbors):
+
                 results.append(int(part_number))
     print(sum(results))
     print(sum(set(results)))
