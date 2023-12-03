@@ -1,7 +1,7 @@
 import itertools
 import string
 
-from utils import get_neighbors, is_valid, print_schematic
+from utils import get_neighbors, is_valid, print_schematic, get_neighbors_positions
 
 
 def make_map(file_name):
@@ -34,6 +34,16 @@ def make_number_index(schematic):
     return part_numbers
 
 
+def make_symbol_index(schematic):
+    symbols = {}
+    max_length = max(i for i, _ in schematic.keys()) + 1
+
+    for i, j in itertools.product(range(max_length), repeat=2):
+        if schematic[(j, i)] not in string.digits+".":
+            symbols[(j, i)] = schematic[(j, i)]
+    return symbols
+
+
 def get_number_coordinates(key, value):
     points = []
     for i in range(len(value)):
@@ -48,13 +58,14 @@ def main():
     schematics = make_map("day_03/input.txt")
     results = []
     part_numbers = make_number_index(schematics)
-
+    symbols = make_symbol_index(schematics)
     for part_number in part_numbers:
         part_positions = get_number_coordinates(part_number, part_numbers[part_number])
-        neighbors = get_neighbors(schematics, part_positions)
-        if is_valid(neighbors):
-            print(part_number, part_numbers[part_number])
-            results.append(int(part_numbers[part_number]))
+        neighbor_positions = get_neighbors_positions(part_positions)
+        for positions in neighbor_positions:
+            if positions in symbols:
+                results.append(int(part_numbers[part_number]))
+    print(symbols)
     print(sum(results))
     print(len(results))
 
