@@ -17,8 +17,7 @@ def make_map(file_name):
                 if char not in string.digits:
                     if part_number:
                         if part_number not in part_numbers:
-                            part_numbers[part_number] = []
-                        part_numbers[part_number].append(part_positions)
+                            part_numbers[part_positions[0]] = part_number
                     part_number = ""
                     part_positions = []
                 else:
@@ -27,6 +26,13 @@ def make_map(file_name):
                 schematic[(idx, line_no)] = char
             line_no += 1
     return schematic, part_numbers
+
+
+def get_number_coordinates(schematic, key, value):
+    points = []
+    for i in range(len(value)):
+        points.append((key[0] + i, key[1]))
+    return points
 
 
 def get_neighbors(schematic, part_positions):
@@ -51,6 +57,7 @@ def get_neighbors_positions(part_positions):
         (1, 1),
     ]
     results = set()
+
     for x, y in part_positions:
         for dx, dy in mask:
             point = (x + dx, y + dy)
@@ -81,20 +88,19 @@ def print_schematic(schematic, max_length=140):
 # not 1169240
 # not 1382231
 def main():
-    schematics, part_numbers = make_map("day_03/input.txt")
+    schematics, part_numbers = make_map("day_03/data_test.txt")
     results = []
+    result_set = set()
     for part_number in part_numbers:
-        print("part number:", part_number)
-        for area in part_numbers[part_number]:
-            neighbors = get_neighbors(schematics, area)
-            print("neighbors:", neighbors)
-            print("is valid:", is_valid(neighbors))
-            if is_valid(neighbors):
-
-                results.append(int(part_number))
+        part_positions = get_number_coordinates(schematics, part_number, part_numbers[part_number])
+        neighbors = get_neighbors(schematics, part_positions)
+        if is_valid(neighbors):
+            results.append(int(part_numbers[part_number]))
+            result_set.add(int(part_numbers[part_number]))
+    print(sum(result_set))
     print(sum(results))
-    print(sum(set(results)))
-    print(len(set(results)))
+    print(len(results))
+    print(len(result_set))
 
 
 if __name__ == "__main__":
