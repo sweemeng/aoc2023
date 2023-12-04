@@ -8,10 +8,6 @@ def parse(file_name):
         for line in data:
             game_id, winning, my_number = parse_line(line)
             results.append((game_id, winning, my_number))
-            overlap = winning.intersection(my_number)
-            if overlap:
-                print(game_id, overlap)
-                print(len(overlap))
     return results
 
 
@@ -26,7 +22,7 @@ def parse_line(line):
 
 
 def parse_numbers(numbers):
-    numbers = re.findall("\d+", numbers)
+    numbers = re.findall(r"\d+", numbers)
     return set(int(i) for i in numbers)
 
 
