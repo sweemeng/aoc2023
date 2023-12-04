@@ -22,7 +22,12 @@ def make_number_index(schematic):
     part_numbers = {}
     max_length = max(i for i, _ in schematic.keys()) + 1
     point = None
+    line = -1
     for i, j in itertools.product(range(max_length), repeat=2):
+        if line != i:
+            point = None
+        line = i
+
         if schematic[(j, i)] in string.digits:
             if not point:
                 point = (j, i)
