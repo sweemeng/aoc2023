@@ -55,6 +55,29 @@ def make_seed_map(seed, data, steps):
     return result
 
 
+def get_actual_start(data, seed):
+    keys = sorted(data.keys())
+    for key in keys:
+        if key > seed:
+            return key - 1
+    return None
+
+
+def get_map_data_ranges(data, seed, ranges):
+    # Let's return list of tuple of 2 with (dest, range)
+    groups = []
+    keys = sorted(data.keys())
+    index = get_actual_start(data, seed)
+    start = seed
+    while True:
+        if keys[index] > seed + ranges:
+            break
+        diff = start - keys[index]
+        dest, step = data[keys[index]]
+        groups.append((dest + diff, step - diff))
+
+
+
 def main():
     # TODO: Get seeds first
     # then use step to direct which direction, start from first item
