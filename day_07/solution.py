@@ -1,5 +1,5 @@
 from collections import Counter
-from functools import cmp_to_key
+from functools import cmp_to_key, partial
 
 card_ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"]
 joker_ranks = ["J", "2", "3", "4", "5", "6", "7", "8", "9", "T", "Q", "K", "A"]
@@ -7,21 +7,12 @@ joker_ranks = ["J", "2", "3", "4", "5", "6", "7", "8", "9", "T", "Q", "K", "A"]
 pattern_ranks = [(1, 1, 1, 1, 1), (2, 1, 1, 1), (2, 2, 1), (3, 1, 1), (3, 2), (4, 1), (5,), ]
 
 
-def resolve_tie(cards_one, cards_two):
+def resolve_tie(cards_one, cards_two, ranks=None):
+    if ranks is None:
+        ranks = card_ranks
     for i in range(5):
-        card_one = card_ranks.index(cards_one[i])
-        card_two = card_ranks.index(cards_two[i])
-        if card_two > card_one:
-            return -1
-        elif card_one > card_two:
-            return 1
-    return 0
-
-
-def joker_resolve_tie(cards_one, cards_two):
-    for i in range(5):
-        card_one = joker_ranks.index(cards_one[i])
-        card_two = joker_ranks.index(cards_two[i])
+        card_one = ranks.index(cards_one[i])
+        card_two = ranks.index(cards_two[i])
         if card_two > card_one:
             return -1
         elif card_one > card_two:
@@ -73,8 +64,8 @@ def main():
         patterns[card_counts].append(cards)
     rank = 0
     for key in patterns:
-
-        ordered_cards = sorted(patterns[key], key=cmp_to_key(joker_resolve_tie))
+        j_resolve_tile = partial(resolve_tie, ranks=joker_ranks)
+        ordered_cards = sorted(patterns[key], key=cmp_to_key(j_resolve_tile))
         print(key, ordered_cards)
         for cards in ordered_cards:
             rank += 1
