@@ -75,6 +75,14 @@ def get_map_data_ranges(data, seed, ranges):
         diff = start - keys[index]
         dest, step = data[keys[index]]
         groups.append((dest + diff, step - diff))
+        start = keys[index] + step
+        index += 1
+        if keys[index] != start:
+            groups.append((start, keys[index] - start))
+            start = keys[index]
+            index += 1
+
+    return groups
 
 
 
